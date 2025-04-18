@@ -57,7 +57,7 @@ func TestGetAPIKey(t *testing.T) {
 		if err == nil || err.Error() != "malformed authorization header" {
 			t.Fatalf("expected error 'malformed authorization header', got '%v'", err)
 		}
-		if apiKey != "aa" {
+		if apiKey != "" {
 			t.Errorf("expected apiKey to be empty, got '%v'", apiKey)
 		}
 	})
