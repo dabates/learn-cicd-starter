@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
@@ -33,6 +35,11 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("PORT environment variable is not set")
+	}
+
+	timeout := os.Getenv("TIMEOUT")
+	if timeout == "" {
+		log.Println("TIMEOUT environment variable is not set")
 	}
 
 	apiCfg := apiConfig{}
@@ -87,10 +94,18 @@ func main() {
 
 	v1Router.Get("/healthz", handlerReadiness)
 
+	parsedTimeout := 0
+	parsedTimeout, err = strconv.Atoi(timeout)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
 	router.Mount("/v1", v1Router)
 	srv := &http.Server{
-		Addr:    ":" + port,
-		Handler: router,
+		Addr:              ":" + port,
+		Handler:           router,
+		ReadHeaderTimeout: time.Duration(parsedTimeout) * time.Second,
 	}
 
 	log.Printf("Serving on port: %s\n", port)
