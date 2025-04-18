@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"embed"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -97,8 +98,8 @@ func main() {
 	parsedTimeout := 0
 	parsedTimeout, err = strconv.Atoi(timeout)
 	if err != nil {
-		log.Fatal(err)
-		return
+		fmt.Println("error parsing timeout, setting to 0")
+		parsedTimeout = 0
 	}
 
 	router.Mount("/v1", v1Router)
