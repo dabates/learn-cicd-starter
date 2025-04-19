@@ -7,6 +7,10 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -18,14 +22,7 @@ jobs:
 
       - name: Build
         run: scripts/buildprod.sh
-
-  setupGCP:
-    # Add "id-token" with the intended permissions.
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
-    steps:
+        
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
